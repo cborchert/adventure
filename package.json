@@ -1,0 +1,17 @@
+{
+  "name": "axelbday",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "parcel ./src/index.html",
+    "build": "parcel build ./src/index.html"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4",
+    "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "pixi.js": "^5.2.1"
+  }
+}
