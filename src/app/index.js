@@ -2,10 +2,10 @@ import * as PIXI from "pixi.js";
 import constants from "./constants";
 import Adventurer from "./components/Adventurer";
 import Background from "./components/Background";
-import { loadPixiAssets, generatePlatformSlice } from "./utils";
+import { loadPixiAssets, generatePlatformSlice, hitTest } from "./utils";
 
 const initGame = async () => {
-  const { SCENE, assets, blockSize, scale } = constants;
+  const { SCENE, assets, blockSize, scale, gravity } = constants;
 
   // retain pixilation
   PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
@@ -49,12 +49,109 @@ const initGame = async () => {
   stage.addChild(worldContainer);
   renderer.render(stage);
 
-  let iterations = 0;
   let animationFrame;
+
+  let adventurerVelocityY = 0;
+
   // each block moves slowly to the left
   let speed = 1 / 16;
   const gameLoop = () => {
     animationFrame = requestAnimationFrame(gameLoop);
+
+    // let nextBottom = adventurer.y + adventurerVelocityY + gravity;
+    // const nextTop = nextBottom - adventurer.height * adventurer.scale.y;
+    // const nextXCenter =
+    //   adventurer.x + (adventurer.width / 2) * adventurer.scale.x;
+
+    // console.log(adventurer);
+    // // check if the player falls
+    // // yeah I know I should use a reduce here
+    // const collidesWith = worldContainer.children.filter(sprite => {
+    //   const spriteWidth = sprite.width * sprite.scale.x;
+    //   const spriteLeft = sprite.x;
+    //   const spriteRight = spriteLeft + spriteWidth;
+    //   // only get blocks on the same column as our user
+    //   const collidesX = nextXCenter < spriteRight && nextXCenter > spriteLeft;
+    //   if (!collidesX) return false;
+
+    //   // if next Y falls inside the user's bounding box falls inside this bounding box, it's a collision
+    //   const spriteTop = sprite.y;
+    //   const spriteBottom = spriteTop + sprite.height;
+    //   return (
+    //     (nextBottom <= spriteTop && nextBottom >= spriteTop) ||
+    //     (nextTop <= spriteTop && nextTop >= spriteTop)
+    //   );
+    // });
+
+    // let userStopped = false;
+    // collidesWith.forEach(sprite => {
+    //   console.log(sprite);
+    //   // if it's not a safe block => damage
+    //   // if the user is jumping (velocity < 0)
+    //   if (adventurerVelocityY < 0) {
+    //     // do nothing
+    //   } else {
+    //     // if the user is falling
+    //     // if the block is solid
+    //     // stop his velocity
+    //     // userStopped = true;
+    //     // nextY =
+    //   }
+    //   // place him on the platform
+    // });
+    let nextBottom = adventurer.y + adventurerVelocityY + gravity;
+    const nextTop = nextBottom - adventurer.height;
+    const nextXCenter = adventurer.x + adventurer.width / 2;
+
+    // check if the player collides
+    // yeah I know I should use a reduce here
+    const collidesWith = worldContainer.children.filter(sprite => {
+      const spriteWidth = sprite.width;
+      const spriteLeft = sprite.x;
+      const spriteRight = spriteLeft + spriteWidth;
+      // only get blocks on the same column as our user
+      const collidesX = nextXCenter < spriteRight && nextXCenter > spriteLeft;
+      if (!collidesX) return false;
+
+      // if next Y falls inside the user's bounding box falls inside this bounding box, it's a collision
+      const spriteTop = sprite.y - sprite.height;
+      const spriteBottom = spriteTop;
+      return nextTop <= spriteBottom && nextBottom >= spriteTop;
+    });
+
+    // if they collides, check the side effects
+    let userStopped = false;
+    let userTakesDamage = false;
+    collidesWith.forEach(sprite => {
+      const aliases = sprite._texture.textureCacheIds;
+      const isSolid =
+        aliases.includes("floorSolid") || aliases.includes("floorDeath");
+      const isDamage = aliases.includes("floorDeath");
+      // if it's not a safe block => damage
+      if (isDamage) {
+        userTakesDamage = true;
+      }
+      // if the user is jumping (velocity < 0)
+      if (adventurerVelocityY < 0) {
+        // do nothing -- the user can pass though
+      } else {
+        // the user is falling
+        // if the block is solid
+        if (isSolid) {
+          // stop his velocity
+          userStopped = true;
+          // place him on the platform
+          nextBottom = sprite.y - sprite.height;
+        }
+      }
+    });
+
+    // add gravity to velocity
+    if (userStopped) {
+      adventurerVelocityY = userStopped ? 0 : adventurerVelocityY + gravity;
+    }
+    adventurer.y = nextBottom;
+
     // background moves slowly to give a
     background.tilePosition.x -= (blockSize * scale * speed) / 4;
 

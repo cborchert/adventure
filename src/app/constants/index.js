@@ -12,7 +12,8 @@ const constants = {
     backgroundNight: "assets/sprites/backgrounds/background-night.png",
     floorSolid: "assets/sprites/floors/solid.png",
     floorDeath: "assets/sprites/floors/death.png"
-  }
+  },
+  gravity: 1
 };
 
 export default constants;
