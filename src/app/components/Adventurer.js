@@ -1,19 +1,16 @@
 import * as PIXI from "pixi.js";
+import constants from "../constants/";
 
 export default () => {
-  // for the static fello
-  // const sprite = new PIXI.Sprite(
-  //   PIXI.Loader.shared.resources["adventurer"].texture
-  // );
-  // sprite.x = sprite.y = 0;
-  // sprite.scale.x = sprite.scale.y = 2;
-  // return sprite;
+  const { SCENE } = constants;
   const resource = PIXI.Loader.shared.resources["adventurer"];
-  console.log(resource);
-  const sprite = new PIXI.AnimatedSprite(resource.spritesheet.animations.idle);
-  sprite.x = sprite.y = 0;
-  sprite.scale.x = sprite.scale.y = 2;
+  const sprite = new PIXI.AnimatedSprite(
+    resource.spritesheet.animations.running
+  );
+  sprite.x = 0;
+  sprite.y = SCENE.height - sprite.height * 3.5;
+  sprite.scale.x = sprite.scale.y = 3;
   sprite.play();
-  sprite.animationSpeed(0.1);
+  sprite.animationSpeed = 0.1;
   return sprite;
 };

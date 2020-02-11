@@ -1,17 +1,13 @@
-import adventurer from "../assets/sprites/adventurer/adventurer.json";
-// import adventurer from "../assets/sprites/adventurer.png";
-import backgroundDay from "../assets/sprites/background-day.png";
-import backgroundNight from "../assets/sprites/background-night.png";
-
 const constants = {
   SCENE: {
     width: 800,
     height: 500
   },
   assets: {
-    adventurer,
-    backgroundDay,
-    backgroundNight
+    // The path "assets" here has been copied by webpack, no need for a relative path
+    adventurer: "assets/sprites/adventurer/adventurer.json",
+    backgroundDay: "assets/sprites/backgrounds/background-day.png",
+    backgroundNight: "assets/sprites/backgrounds/background-night.png"
   }
 };
 
