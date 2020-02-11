@@ -1,0 +1,221 @@
+{
+  "frames": {
+    "adventurer0.png": {
+      "frame": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer1.png": {
+      "frame": { "x": 50, "y": 0, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer2.png": {
+      "frame": { "x": 100, "y": 0, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer3.png": {
+      "frame": { "x": 150, "y": 0, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer4.png": {
+      "frame": { "x": 0, "y": 37, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer5.png": {
+      "frame": { "x": 50, "y": 37, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer6.png": {
+      "frame": { "x": 100, "y": 37, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer7.png": {
+      "frame": { "x": 150, "y": 37, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer8.png": {
+      "frame": { "x": 0, "y": 74, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer9.png": {
+      "frame": { "x": 50, "y": 74, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer10.png": {
+      "frame": { "x": 100, "y": 74, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer11.png": {
+      "frame": { "x": 150, "y": 74, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer12.png": {
+      "frame": { "x": 0, "y": 111, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer13.png": {
+      "frame": { "x": 50, "y": 111, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer14.png": {
+      "frame": { "x": 100, "y": 111, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer15.png": {
+      "frame": { "x": 150, "y": 111, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer16.png": {
+      "frame": { "x": 0, "y": 148, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer17.png": {
+      "frame": { "x": 50, "y": 148, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer18.png": {
+      "frame": { "x": 100, "y": 148, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer19.png": {
+      "frame": { "x": 150, "y": 148, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer20.png": {
+      "frame": { "x": 0, "y": 185, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer21.png": {
+      "frame": { "x": 50, "y": 185, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer22.png": {
+      "frame": { "x": 100, "y": 185, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    },
+    "adventurer23.png": {
+      "frame": { "x": 150, "y": 185, "w": 50, "h": 37 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 50, "h": 37 },
+      "sourceSize": { "w": 50, "h": 37 }
+    }
+  },
+  "animations": {
+    "idle": [
+      "adventurer0.png",
+      "adventurer1.png",
+      "adventurer2.png",
+      "adventurer3.png"
+    ],
+    "crouch": [
+      "adventurer4.png",
+      "adventurer5.png",
+      "adventurer6.png",
+      "adventurer7.png"
+    ],
+    "running": [
+      "adventurer8.png",
+      "adventurer9.png",
+      "adventurer10.png",
+      "adventurer11.png",
+      "adventurer12.png",
+      "adventurer13.png"
+    ],
+    "jumpingFlip": [
+      "adventurer14.png",
+      "adventurer15.png",
+      "adventurer16.png",
+      "adventurer17.png",
+      "adventurer18.png",
+      "adventurer19.png",
+      "adventurer20.png",
+      "adventurer21.png",
+      "adventurer22.png",
+      "adventurer23.png"
+    ],
+    "jumping": [
+      "adventurer14.png",
+      "adventurer15.png",
+      "adventurer16.png",
+      "adventurer17.png",
+      "adventurer22.png",
+      "adventurer23.png"
+    ]
+  },
+  "meta": {
+    "app": "https://github.com/piskelapp/piskel/",
+    "version": "1.0",
+    "image": "adventurer.png",
+    "format": "RGBA8888",
+    "size": { "w": 200, "h": 222 }
+  }
+}

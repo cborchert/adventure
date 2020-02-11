@@ -15,7 +15,7 @@ html,
   justify-content: center;
 }
 
-#game {
+canvas {
   margin: auto;
   overflow: hidden;
   border: 1px dotted black;
