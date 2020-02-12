@@ -213,7 +213,7 @@ const initGame = async () => {
     // container.addChild(loseBox);
   };
 
-  const changeBrackground = () => {
+  const changeBackground = () => {
     if (currentBackgroundNight) {
       container.removeChild(backgroundNight);
       container.addChild(background);
@@ -238,7 +238,7 @@ const initGame = async () => {
 
     // ça ne sert à rien ahaha
     if (score && score % 1000 === 0) {
-      changeBrackground();
+      changeBackground();
     }
 
     // Speed up the loop every 200 repetitions
