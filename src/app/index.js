@@ -57,18 +57,36 @@ const initGame = async () => {
   let adventurerDoubleJumping = false;
   canvasEl.addEventListener("click", () => {
     if (adventurerDoubleJumping) return;
-    if (adventurerJumping || adventurerVelocityY > 0) {
+    // TODO: Think about disabling the double jump if you're already falling?
+    // adventurerJumping || adventurerVelocityY > 0
+    if (adventurerJumping) {
       adventurerDoubleJumping = true;
+      adventurerVelocityY = -13;
+    } else {
+      adventurerVelocityY = -9;
     }
-    adventurerVelocityY = -12;
+    adventurerJumping = true;
   });
 
   // each block moves slowly to the left
-  let speed = 1 / 12;
+  let speed = 1 / 10;
 
   let animationFrame;
+  let loopCount = 0;
   const gameLoop = () => {
     animationFrame = requestAnimationFrame(gameLoop);
+
+    // Speed up the loop every 200 repetitions
+    if (loopCount >= 200) {
+      loopCount = 0;
+      if (speed < 0.5) {
+        speed += 1 / 64;
+      }
+      if (adventurer.animationSpeed < 0.25) {
+        adventurer.animationSpeed += 0.005;
+      }
+    }
+    loopCount += 1;
 
     // the number of pixels to displace everything to the left
     const dX = blockSize * scale * speed;
