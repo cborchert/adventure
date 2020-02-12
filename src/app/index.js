@@ -220,9 +220,6 @@ const initGame = async () => {
         score += bonus;
       }
 
-      // update score text
-      scoreText.text = score;
-
       // remove one-time sprites; items, for example
       const destroySprite = aliases.some(a =>
         [
@@ -238,6 +235,9 @@ const initGame = async () => {
         sprite.destroy();
       }
     });
+
+    // update score text
+    scoreText.text = score;
 
     // MOVE adventurer
     // add gravity to velocity
