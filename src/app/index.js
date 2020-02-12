@@ -55,7 +55,7 @@ const initGame = async () => {
   // allow jumps and double jumps
   let adventurerJumping = false;
   let adventurerDoubleJumping = false;
-  canvasEl.addEventListener("click", () => {
+  const jump = () => {
     if (adventurerDoubleJumping) return;
     // TODO: Think about disabling the double jump if you're already falling?
     // adventurerJumping || adventurerVelocityY > 0
@@ -66,7 +66,9 @@ const initGame = async () => {
       adventurerVelocityY = -9;
     }
     adventurerJumping = true;
-  });
+  };
+  canvasEl.addEventListener("touchstart", jump);
+  canvasEl.addEventListener("click", jump);
 
   // each block moves slowly to the left
   let speed = 1 / 10;
