@@ -73,12 +73,14 @@ const initGame = async () => {
 
   let animationFrame;
   let loopCount = 0;
+  let difficulty = 0;
   const gameLoop = () => {
     animationFrame = requestAnimationFrame(gameLoop);
 
     // Speed up the loop every 200 repetitions
     if (loopCount >= 200) {
       loopCount = 0;
+      difficulty += 1;
       if (speed < 0.5) {
         speed += 1 / 64;
       }
