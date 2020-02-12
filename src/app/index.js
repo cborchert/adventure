@@ -49,12 +49,24 @@ const initGame = async () => {
   stage.addChild(worldContainer);
   renderer.render(stage);
 
-  let animationFrame;
-
+  // prepare for animation
   let adventurerVelocityY = 0;
+
+  // allow jumps and double jumps
+  let adventurerJumping = false;
+  let adventurerDoubleJumping = false;
+  canvasEl.addEventListener("click", () => {
+    if (adventurerDoubleJumping) return;
+    if (adventurerJumping || adventurerVelocityY > 0) {
+      adventurerDoubleJumping = true;
+    }
+    adventurerVelocityY = -12;
+  });
 
   // each block moves slowly to the left
   let speed = 1 / 12;
+
+  let animationFrame;
   const gameLoop = () => {
     animationFrame = requestAnimationFrame(gameLoop);
 
@@ -76,8 +88,8 @@ const initGame = async () => {
     const nextCenter = adventurer.x + 0.5 * adventurer.width;
     const nextLeft = nextCenter - 0.5 * blockSize * scale;
     const nextRight = nextCenter + 0.5 * blockSize * scale;
-    // unless otherwise noted, the user is falling
-    let userFalls = true;
+    // unless otherwise noted, the adventurer is falling
+    let adventurerFalls = true;
     // check collisions and their effects
     worldContainer.children.forEach(sprite => {
       const spriteLeft = sprite.x;
@@ -87,7 +99,7 @@ const initGame = async () => {
       const collidesX = nextRight >= spriteLeft && nextLeft <= spriteRight;
       if (!collidesX) return;
 
-      // if next Y falls inside the user's bounding box falls inside this bounding box, it's a collision
+      // if next Y falls inside the adventurer's bounding box falls inside this bounding box, it's a collision
       const spriteTop = sprite.y - sprite.height;
       const spriteBottom = sprite.y;
 
@@ -107,10 +119,10 @@ const initGame = async () => {
       // deal with the collisions that prevent you from falling
       const isSolid =
         aliases.includes("floorSolid") || aliases.includes("floorDeath");
-      // only stop user from falling through solid blocks; they can jump through the bottom
+      // only stop adventurer from falling through solid blocks; they can jump through the bottom
       if (isSolid && droppingThrough) {
         // stop his velocity when we'll calculate gravity
-        userFalls = false;
+        adventurerFalls = false;
         // don't move him
         nextBottom = spriteTop;
       }
@@ -128,12 +140,18 @@ const initGame = async () => {
       }
     });
 
-    // MOVE USER
+    // MOVE adventurer
     // add gravity to velocity
-    adventurerVelocityY = userFalls ? adventurerVelocityY + gravity : 0;
+    if (adventurerFalls) {
+      adventurerVelocityY = adventurerVelocityY + gravity;
+    } else {
+      adventurerVelocityY = 0;
+      adventurerJumping = false;
+      adventurerDoubleJumping = false;
+    }
     // calculate the new Y position
     adventurer.y = nextBottom;
-    // TODO: User dies from falling
+    // TODO: adventurer dies from falling
     if (adventurer.y - adventurer.height > SCENE.height) {
       cancelAnimationFrame(animationFrame);
     }

@@ -13,7 +13,7 @@ const constants = {
     floorSolid: "assets/sprites/floors/solid.png",
     floorDeath: "assets/sprites/floors/death.png"
   },
-  gravity: 0.5
+  gravity: 0.4
 };
 
 export default constants;
