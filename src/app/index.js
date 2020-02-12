@@ -185,15 +185,42 @@ const initGame = async () => {
         nextBottom = spriteTop;
       }
 
-      // deal with damage
-      const isDamage = aliases.includes("floorDeath");
-      if (isDamage && collidesY) {
-        //
+      if (collidesY) {
+        // deal with damage
+        let damage = 0;
+        if (aliases.includes("floorDeath")) damage = 10;
+        if (aliases.includes("item-hamburger")) damage = 10;
+        if (aliases.includes("item-avocado")) damage = 5;
+
+        //TODO: Special effect visual
+        score -= damage;
+
+        // deal with bonuses
+        let bonus = 0;
+        if (aliases.includes("item-water")) bonus = 20;
+        if (aliases.includes("item-recycle")) bonus = 30;
+        if (aliases.includes("item-pimento")) {
+          speed = (speed * 3) / 4;
+          adventurer.animationSpeed = (adventurer.animationSpeed * 5) / 6;
+          bonus = 500;
+        }
+
+        //TODO: Special effect visual
+        score += bonus;
       }
 
-      // remove one time sprites; items, for example
-      const destroySprite = false;
+      // remove one-time sprites; items, for example
+      const destroySprite = aliases.some(a =>
+        [
+          "item-avocado",
+          "item-hamburger",
+          "item-pimento",
+          "item-recycle",
+          "item-water"
+        ].includes(a)
+      );
       if (destroySprite) {
+        worldContainer.removeChild(sprite);
         sprite.destroy();
       }
     });

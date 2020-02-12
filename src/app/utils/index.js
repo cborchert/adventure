@@ -46,22 +46,34 @@ export const createLevel = rawTiles => {
 export const generatePlatformSlice = (
   xOffset,
   platformConfiguration,
-  floorTypes
+  floorTypes,
+  itemTypes,
+  maxNumItems = 4
 ) => {
   const { SCENE, blockSize, scale } = constants;
+  const resource = name => PIXI.Loader.shared.resources[name] || undefined;
   floorTypes = floorTypes || [
     undefined,
-    PIXI.Loader.shared.resources["floorSolid"],
-    PIXI.Loader.shared.resources["floorDeath"],
+    "floorSolid",
+    "floorDeath",
     undefined,
     undefined,
     undefined,
     undefined,
     undefined,
-    PIXI.Loader.shared.resources["floorSolid"],
-    PIXI.Loader.shared.resources["floorSolid"],
-    PIXI.Loader.shared.resources["floorSolid"],
-    PIXI.Loader.shared.resources["floorSolid"]
+    "floorSolid",
+    "floorSolid",
+    "floorSolid",
+    "floorSolid"
+  ];
+
+  itemTypes = itemTypes || [
+    ...Array(400).fill(undefined),
+    ...Array(13).fill("item-avocado"),
+    ...Array(9).fill("item-hamburger"),
+    ...Array(6).fill("item-recycle"),
+    ...Array(5).fill("item-water"),
+    ...Array(2).fill("item-pimento")
   ];
   platformConfiguration = platformConfiguration || [
     Math.floor(Math.random() * floorTypes.length),
@@ -71,18 +83,36 @@ export const generatePlatformSlice = (
 
   const sprites = [];
   platformConfiguration.forEach((floorType, level) => {
-    const floorResource = floorTypes[floorType];
+    const floorResource =
+      floorTypes[floorType] && resource(floorTypes[floorType]);
     if (floorResource) {
       const y = SCENE.height - level * 5 * blockSize * scale;
       for (let x = 0; x < 4; x++) {
-        const sprite = new PIXI.Sprite(floorResource.texture);
-        sprite.anchor.set(0, 1);
-        sprite.y = y;
-        sprite.x = x * blockSize * scale + xOffset;
-        sprite.scale.x = sprite.scale.y = scale;
-        sprites.push(sprite);
+        if (floorResource) {
+          const sprite = new PIXI.Sprite(floorResource.texture);
+          sprite.anchor.set(0, 1);
+          sprite.y = y;
+          sprite.x = x * blockSize * scale + xOffset;
+          sprite.scale.x = sprite.scale.y = scale;
+          sprites.push(sprite);
+        }
       }
     }
   });
+  for (let i = 0; i < maxNumItems; i++) {
+    const level = Math.floor(Math.random() * 3);
+    const x = Math.floor(Math.random() * 4);
+    const y = SCENE.height - level * 5 * blockSize * scale;
+    const itemType = Math.floor(Math.random() * itemTypes.length);
+    const itemResource = itemTypes[itemType] && resource(itemTypes[itemType]);
+    if (itemResource) {
+      const sprite = new PIXI.Sprite(itemResource.texture);
+      sprite.anchor.set(0, 1);
+      sprite.y = y - blockSize * scale;
+      sprite.x = x * blockSize * scale + xOffset;
+      sprite.width = sprite.height = blockSize * scale;
+      sprites.push(sprite);
+    }
+  }
   return sprites;
 };

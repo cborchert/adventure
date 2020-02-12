@@ -11,7 +11,14 @@ const constants = {
     backgroundDay: "assets/sprites/backgrounds/background-day.png",
     backgroundNight: "assets/sprites/backgrounds/background-night.png",
     floorSolid: "assets/sprites/floors/solid.png",
-    floorDeath: "assets/sprites/floors/death.png"
+    floorDeath: "assets/sprites/floors/death.png",
+    "item-avocado": "assets/sprites/items/avocado.png",
+    "item-hamburger": "assets/sprites/items/hamburger.png",
+    "item-moon": "assets/sprites/items/moon.png",
+    "item-recycle": "assets/sprites/items/recycle.png",
+    "item-sun": "assets/sprites/items/sun.png",
+    "item-water": "assets/sprites/items/water.png",
+    "item-pimento": "assets/sprites/items/pimento.png"
   },
   gravity: 0.4
 };
