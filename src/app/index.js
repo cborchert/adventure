@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import constants from "./constants";
 import Adventurer from "./components/Adventurer";
 import Background from "./components/Background";
+import BoxText from "./components/BoxText.js";
 import { loadPixiAssets, generatePlatformSlice, hitTest } from "./utils";
 
 const initGame = async () => {
@@ -27,11 +28,22 @@ const initGame = async () => {
 
   // add the background to the container
   const background = Background();
+  // Background Night
+  const backgroundNight = Background(true);
   container.addChild(background);
 
   // add the adventurer to the container
-  const adventurer = Adventurer();
-  container.addChild(adventurer);
+  const adventurer = Adventurer("running");
+  const adventurerIdle = Adventurer("idle");
+  const adventurerSpriteJumping = Adventurer("jumping");
+  const adventurerJumpingFlip = Adventurer("jumpingFlip");
+  container.addChild(adventurerIdle);
+
+  const logo = PIXI.Sprite.from("assets/sprites/game/title.png");
+  logo.anchor.set(0.5);
+  logo.x = SCENE.width / 2;
+  logo.y = 120;
+  container.addChild(logo);
 
   // add platforms to the world
   let worldContainer = new PIXI.Container();
@@ -40,8 +52,23 @@ const initGame = async () => {
   stage.addChild(worldContainer);
   renderer.render(stage);
 
+  const boxText = BoxText(
+    500,
+    200,
+    "Le monde est en danger ! \r\nEvite les avocats & les hamburgers pour survivre \r\n(ps: ne cours pas sur les plaques rouges\r\ntu risques de te faire très très mal)\r\n\r\nVas-tu réussir à sauver le monde ? "
+  );
+  container.addChild(boxText);
+
   // prepare for animation
   let adventurerVelocityY = 0;
+
+  let gameIsStarted = false;
+
+  let lastDownTarget = null;
+
+  let currentBackgroundNight = false;
+
+  let loseBox = null;
 
   // allow jumps and double jumps
   let adventurerJumping,
@@ -52,8 +79,8 @@ const initGame = async () => {
     speed,
     score;
 
-  let scoreText = new PIXI.Text("Toto", {
-    fontFamily: "Courier",
+  let scoreText = new PIXI.Text("", {
+    fontFamily: "Futura",
     dropShadow: true,
     fontWeight: "bold",
     fontSize: 36,
@@ -94,36 +121,125 @@ const initGame = async () => {
     worldSprites.forEach(sprite => worldContainer.addChild(sprite));
   };
 
+  const toggleAdventurerIdle = isGameStoped => {
+    if (isGameStoped) {
+      container.removeChild(adventurer);
+      container.addChild(adventurerIdle);
+    } else {
+      container.removeChild(adventurerIdle);
+      container.addChild(adventurer);
+    }
+  };
+
   const jump = () => {
     if (adventurerDoubleJumping) return;
     // TODO: Think about disabling the double jump if you're already falling?
     // adventurerJumping || adventurerVelocityY > 0
     if (adventurerJumping) {
+      // switch model to double jump
       adventurerDoubleJumping = true;
       adventurerVelocityY = -13;
     } else {
+      // switch model to jump
       adventurerVelocityY = -9;
     }
     adventurerJumping = true;
   };
 
   const clickHandler = () => {
-    if (adventurerAlive) {
-      jump();
+    if (gameIsStarted) {
+      if (adventurerAlive) {
+        jump();
+      } else {
+        container.removeChild(loseBox);
+
+        toggleAdventurerIdle(false);
+        reset();
+      }
     } else {
-      reset();
+      container.removeChild(boxText);
+      container.removeChild(logo);
+      gameIsStarted = true;
+      toggleAdventurerIdle(false);
     }
   };
-  canvasEl.addEventListener("touchstart", clickHandler);
-  canvasEl.addEventListener("click", clickHandler);
+  canvasEl.addEventListener("touchstart", e => {
+    lastDownTarget = e.target;
+    clickHandler();
+  });
+  canvasEl.addEventListener("click", e => {
+    lastDownTarget = e.target;
+    clickHandler();
+  });
+  /* We're fucked, we can't focus first canvas and canvas seems not working with key up and key down :/
+  So I stock last dom focus and setting keyUp on Document dom, check if Canvas is focuses, if true jump :D  
+  */
+  document.addEventListener(
+    "keyup",
+    e => {
+      if (lastDownTarget == canvasEl) {
+        if (e.keyCode === 32) {
+          clickHandler();
+        }
+      }
+    },
+    true
+  );
 
   let animationFrame;
   // init the game
   reset();
 
+  const showLoseMessage = score => {
+    let message;
+    if (score < 100) {
+      message = "🌂";
+    } else if (score < 1000) {
+      message = "Oh no, you were our last hope";
+    } else if (score < 5000) {
+      message = "Good job, future generations will appreciate your work";
+    } else if (score < 10000) {
+      message = "Excellent! You've saved the planet";
+    } else {
+      message = "Woah, Eric is very proud of you !";
+    }
+
+    loseBox = BoxText(
+      400,
+      100,
+      "You lose...\r\n" + message + "\r\n Your score is: " + score
+    );
+    // Current bug, can't hide loseBox removeChild not working...
+    // container.addChild(loseBox);
+  };
+
+  const changeBrackground = () => {
+    if (currentBackgroundNight) {
+      container.removeChild(backgroundNight);
+      container.addChild(background);
+    } else {
+      container.removeChild(background);
+      container.addChild(backgroundNight);
+    }
+
+    // We need to remove and reshow adventurer
+    container.removeChild(adventurer);
+    container.addChild(adventurer);
+    currentBackgroundNight = !currentBackgroundNight;
+  };
+
   const gameLoop = () => {
     animationFrame = requestAnimationFrame(gameLoop);
-    if (!adventurerAlive) return;
+    if (!adventurerAlive) {
+      toggleAdventurerIdle(true);
+      showLoseMessage(score);
+    }
+    if (!adventurerAlive || !gameIsStarted) return;
+
+    // ça ne sert à rien ahaha
+    if (score && score % 1000 === 0) {
+      changeBrackground();
+    }
 
     // Speed up the loop every 200 repetitions
     if (loopCount >= 200) {

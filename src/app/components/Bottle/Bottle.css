@@ -1,0 +1,68 @@
+:root {
+    --pimento: #ffeab6;
+    --pimento_light: #feca8e;
+    --red: #FF3238;
+    --cap: #760e0b;
+    --cap-light: #900403;
+}
+
+@keyframes rotating {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes rotating-invert {
+    from {
+      transform: rotate(360deg);
+    }
+    to {
+      transform: rotate(0deg);
+    }
+  }
+
+.Bottle {
+    position: absolute;
+    z-index: 1;
+    perspective: 150px;
+    width: 40px;
+}
+ 
+.Bottle__Cap {
+  background: linear-gradient(to left, var(--cap) 50%, var(--cap-light) 50%);
+  position: relative;
+  z-index: 1;
+  width: 20px;
+  height: 4px;
+  margin-left: 10px;
+}
+    
+.Bottle__Neck {
+  background: linear-gradient(to left, var(--pimento) 50%, var(--pimento_light) 50%);
+  transform: rotateX(45deg);
+  backface-visibility: hidden;
+  height: 80px;
+  width: 20px;
+  margin: -26px 0 0 10px;
+}
+
+.Bottle__Body {
+    background: linear-gradient(to left, var(--pimento) 50%, var(--pimento_light) 50%);
+    border-top-right-radius: 35%;
+    border-top-left-radius: 35%;
+    margin-top: -20px;
+    height: 80px;
+}
+
+.Bottle__Label {
+  background:  url('https://www.zupimages.net/up/20/07/0ryx.png') no-repeat;
+  position: absolute;
+  top: 55%;
+  background-size: contain;
+  height: 30px;
+  width: 100%;
+  z-index: 1;
+}

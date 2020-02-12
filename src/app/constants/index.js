@@ -10,6 +10,7 @@ const constants = {
     adventurer: "assets/sprites/adventurer/adventurer.json",
     backgroundDay: "assets/sprites/backgrounds/background-day.png",
     backgroundNight: "assets/sprites/backgrounds/background-night.png",
+    mainTitle: "assets/sprites/game/title.png",
     floorSolid: "assets/sprites/floors/solid.png",
     floorDeath: "assets/sprites/floors/death.png",
     "item-avocado": "assets/sprites/items/avocado.png",
