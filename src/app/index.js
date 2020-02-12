@@ -34,16 +34,7 @@ const initGame = async () => {
   container.addChild(adventurer);
 
   // add platforms to the world
-  const worldContainer = new PIXI.Container();
-  const worldSprites = [
-    ...generatePlatformSlice(0 * blockSize * scale, [1, 0, 0]),
-    ...generatePlatformSlice(4 * blockSize * scale, [1, 0, 0]),
-    ...generatePlatformSlice(8 * blockSize * scale, [1, 0, 0]),
-    ...generatePlatformSlice(12 * blockSize * scale, [1, 0, 0]),
-    ...generatePlatformSlice(16 * blockSize * scale, [1, 0, 0]),
-    ...generatePlatformSlice(20 * blockSize * scale, [1, 0, 0])
-  ];
-  worldSprites.forEach(sprite => worldContainer.addChild(sprite));
+  let worldContainer = new PIXI.Container();
 
   stage.addChild(container);
   stage.addChild(worldContainer);
@@ -53,8 +44,46 @@ const initGame = async () => {
   let adventurerVelocityY = 0;
 
   // allow jumps and double jumps
-  let adventurerJumping = false;
-  let adventurerDoubleJumping = false;
+  let adventurerJumping,
+    adventurerDoubleJumping,
+    adventurerAlive,
+    loopCount,
+    difficulty,
+    speed,
+    score;
+
+  const reset = () => {
+    // remove all the previous tiles and repopulate
+    stage.removeChild(worldContainer);
+    worldContainer.destroy();
+    worldContainer = new PIXI.Container();
+    stage.addChild(worldContainer);
+    worldContainer.children.forEach(sprite => {
+      sprite.destroy();
+      worldContainer.removeChild(sprite);
+    });
+
+    loopCount = 0;
+    difficulty = 0;
+    speed = 1 / 10;
+    adventurerAlive = true;
+    adventurerJumping = false;
+    adventurerDoubleJumping = false;
+    adventurer.animationSpeed = 0.1;
+    score = 0;
+    adventurer.y = SCENE.height - blockSize * scale;
+
+    const worldSprites = [
+      ...generatePlatformSlice(0 * blockSize * scale, [1, 0, 0]),
+      ...generatePlatformSlice(4 * blockSize * scale, [1, 0, 0]),
+      ...generatePlatformSlice(8 * blockSize * scale, [1, 0, 0]),
+      ...generatePlatformSlice(12 * blockSize * scale, [1, 0, 0]),
+      ...generatePlatformSlice(16 * blockSize * scale, [1, 0, 0]),
+      ...generatePlatformSlice(20 * blockSize * scale, [1, 0, 0])
+    ];
+    worldSprites.forEach(sprite => worldContainer.addChild(sprite));
+  };
+
   const jump = () => {
     if (adventurerDoubleJumping) return;
     // TODO: Think about disabling the double jump if you're already falling?
@@ -67,17 +96,24 @@ const initGame = async () => {
     }
     adventurerJumping = true;
   };
-  canvasEl.addEventListener("touchstart", jump);
-  canvasEl.addEventListener("click", jump);
 
-  // each block moves slowly to the left
-  let speed = 1 / 10;
+  const clickHandler = () => {
+    if (adventurerAlive) {
+      jump();
+    } else {
+      reset();
+    }
+  };
+  canvasEl.addEventListener("touchstart", clickHandler);
+  canvasEl.addEventListener("click", clickHandler);
 
   let animationFrame;
-  let loopCount = 0;
-  let difficulty = 0;
+  // init the game
+  reset();
+
   const gameLoop = () => {
     animationFrame = requestAnimationFrame(gameLoop);
+    if (!adventurerAlive) return;
 
     // Speed up the loop every 200 repetitions
     if (loopCount >= 200) {
@@ -98,8 +134,8 @@ const initGame = async () => {
     // remove unused blocks
     worldContainer.children.forEach(worldSprite => {
       if (worldSprite.x < -1 * blockSize * scale) {
-        // worldContainer.removeChild(worldSprite);
         worldSprite.destroy();
+        worldContainer.removeChild(worldSprite);
       }
     });
 
@@ -173,9 +209,9 @@ const initGame = async () => {
     }
     // calculate the new Y position
     adventurer.y = nextBottom;
-    // TODO: adventurer dies from falling
+    // adventurer dies from falling
     if (adventurer.y - adventurer.height > SCENE.height) {
-      cancelAnimationFrame(animationFrame);
+      adventurerAlive = false;
     }
 
     // background moves slower than foreground to give a parallax effect
