@@ -18,7 +18,8 @@ const constants = {
     "item-recycle": "assets/sprites/items/recycle.png",
     "item-sun": "assets/sprites/items/sun.png",
     "item-water": "assets/sprites/items/water.png",
-    "item-pimento": "assets/sprites/items/pimento.png"
+    "item-pimento": "assets/sprites/items/pimento.png",
+    "item-renault": "assets/sprites/items/renault.png"
   },
   gravity: 0.4
 };

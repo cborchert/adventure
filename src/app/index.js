@@ -215,6 +215,11 @@ const initGame = async () => {
           adventurer.animationSpeed = (adventurer.animationSpeed * 5) / 6;
           bonus = 1000;
         }
+        if (aliases.includes("item-renault")) {
+          speed = speed * 2;
+          adventurer.animationSpeed = adventurer.animationSpeed * 1.5;
+          bonus = score;
+        }
 
         //TODO: Special effect visual
         score += bonus;

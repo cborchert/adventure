@@ -73,7 +73,8 @@ export const generatePlatformSlice = (
     ...Array(9).fill("item-hamburger"),
     ...Array(6).fill("item-recycle"),
     ...Array(5).fill("item-water"),
-    ...Array(2).fill("item-pimento")
+    ...Array(2).fill("item-pimento"),
+    ...Array(1).fill("item-renault")
   ];
   platformConfiguration = platformConfiguration || [
     Math.floor(Math.random() * floorTypes.length),
