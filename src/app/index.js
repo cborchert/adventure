@@ -216,8 +216,8 @@ const initGame = async () => {
           bonus = 1000;
         }
         if (aliases.includes("item-renault")) {
-          speed = speed * 2;
-          adventurer.animationSpeed = adventurer.animationSpeed * 1.5;
+          speed = speed * 1.5;
+          adventurer.animationSpeed = adventurer.animationSpeed * 1.1;
           bonus = score;
         }
 
@@ -232,7 +232,8 @@ const initGame = async () => {
           "item-hamburger",
           "item-pimento",
           "item-recycle",
-          "item-water"
+          "item-water",
+          "item-renault"
         ].includes(a)
       );
       if (destroySprite) {
