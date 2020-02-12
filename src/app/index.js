@@ -52,6 +52,16 @@ const initGame = async () => {
     speed,
     score;
 
+  let scoreText = new PIXI.Text("Toto", {
+    fontFamily: "Courier",
+    dropShadow: true,
+    fontWeight: "bold",
+    fontSize: 36,
+    fill: 0xffffff,
+    align: "center"
+  });
+  stage.addChild(scoreText);
+
   const reset = () => {
     // remove all the previous tiles and repopulate
     stage.removeChild(worldContainer);
@@ -127,6 +137,7 @@ const initGame = async () => {
       }
     }
     loopCount += 1;
+    score++;
 
     // the number of pixels to displace everything to the left
     const dX = blockSize * scale * speed;
@@ -188,26 +199,29 @@ const initGame = async () => {
       if (collidesY) {
         // deal with damage
         let damage = 0;
-        if (aliases.includes("floorDeath")) damage = 10;
-        if (aliases.includes("item-hamburger")) damage = 10;
-        if (aliases.includes("item-avocado")) damage = 5;
+        if (aliases.includes("floorDeath")) damage = 20;
+        if (aliases.includes("item-hamburger")) damage = 200;
+        if (aliases.includes("item-avocado")) damage = 100;
 
         //TODO: Special effect visual
         score -= damage;
 
         // deal with bonuses
         let bonus = 0;
-        if (aliases.includes("item-water")) bonus = 20;
-        if (aliases.includes("item-recycle")) bonus = 30;
+        if (aliases.includes("item-water")) bonus = 100;
+        if (aliases.includes("item-recycle")) bonus = 200;
         if (aliases.includes("item-pimento")) {
           speed = (speed * 3) / 4;
           adventurer.animationSpeed = (adventurer.animationSpeed * 5) / 6;
-          bonus = 500;
+          bonus = 1000;
         }
 
         //TODO: Special effect visual
         score += bonus;
       }
+
+      // update score text
+      scoreText.text = score;
 
       // remove one-time sprites; items, for example
       const destroySprite = aliases.some(a =>
@@ -237,7 +251,7 @@ const initGame = async () => {
     // calculate the new Y position
     adventurer.y = nextBottom;
     // adventurer dies from falling
-    if (adventurer.y - adventurer.height > SCENE.height) {
+    if (adventurer.y - adventurer.height > SCENE.height || score < 0) {
       adventurerAlive = false;
     }
 
