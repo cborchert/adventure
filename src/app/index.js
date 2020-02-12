@@ -199,7 +199,7 @@ const initGame = async () => {
       if (collidesY) {
         // deal with damage
         let damage = 0;
-        if (aliases.includes("floorDeath")) damage = 20;
+        if (aliases.includes("floorDeath")) damage = 10;
         if (aliases.includes("item-hamburger")) damage = 200;
         if (aliases.includes("item-avocado")) damage = 100;
 
