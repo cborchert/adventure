@@ -12,7 +12,7 @@ export default (boxWidth, boxHeight, text) => {
   graphics.endFill();
 
   const basicText = new PIXI.Text(text, {
-    fontFamily: "Futura",
+    fontFamily: "Futura, Comic Sans MS",
     fontSize: 20,
     fill: 0xffffff
   });
