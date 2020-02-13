@@ -71,7 +71,7 @@ const initGame = async () => {
 
   let lastDownTarget = null;
 
-  let loseBox = BoxText(400, 100, "");
+  let loseBox = BoxText(450, 100, "");
   loseBox.alpha = 0;
   helperContainer.addChild(loseBox);
 
@@ -383,6 +383,7 @@ const initGame = async () => {
         if (aliases.includes("item-recycle")) bonus = 200;
         if (aliases.includes("item-shrimp") && isWhaleWolf) bonus = 20;
         if (aliases.includes("item-pimento")) {
+          PIXISOUND.sound.play("pimento");
           speed = (speed * 3) / 4;
           if (speed < 1 / 20) {
             speed = 1 / 20;
