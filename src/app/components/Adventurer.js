@@ -14,8 +14,15 @@ export default (animationKey = "running") => {
   sprite.play();
   sprite.animationSpeed = 0.1;
 
-  const setAnimation = animationKey => {
-    const currentTextures = resource.spritesheet.animations[animationKey];
+  const setAnimation = (animationKey, isWhaleWolf) => {
+    // add whalewolf swimming animation 🐋🐺
+    if (isWhaleWolf) animationKey = "swimming";
+    const currentResource =
+      animationKey === "swimming"
+        ? PIXI.Loader.shared.resources["whalewolf"]
+        : PIXI.Loader.shared.resources["adventurer"];
+    const currentTextures =
+      currentResource.spritesheet.animations[animationKey];
 
     if (sprite.textures !== currentTextures) {
       sprite.textures = currentTextures;

@@ -8,6 +8,7 @@ const constants = {
   assets: {
     // The path "assets" here has been copied by webpack, no need for a relative path
     adventurer: "assets/sprites/adventurer/adventurer.json",
+    whalewolf: "assets/sprites/whalewolf/whalewolf.json",
     backgroundDay: "assets/sprites/backgrounds/background-day.png",
     backgroundNight: "assets/sprites/backgrounds/background-night.png",
     mainTitle: "assets/sprites/game/title.png",
@@ -20,7 +21,8 @@ const constants = {
     "item-sun": "assets/sprites/items/sun.png",
     "item-water": "assets/sprites/items/water.png",
     "item-pimento": "assets/sprites/items/pimento.png",
-    "item-renault": "assets/sprites/items/renault.png"
+    "item-renault": "assets/sprites/items/renault.png",
+    "item-shrimp": "assets/sprites/items/shrimp.png"
   },
   gravity: 0.4
 };

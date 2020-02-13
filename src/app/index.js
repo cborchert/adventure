@@ -3,7 +3,7 @@ import constants from "./constants";
 import Adventurer from "./components/Adventurer";
 import Background from "./components/Background";
 import BoxText from "./components/BoxText.js";
-import { loadPixiAssets, generatePlatformSlice, hitTest } from "./utils";
+import { loadPixiAssets, generatePlatformSlice } from "./utils";
 
 const initGame = async () => {
   const { SCENE, assets, blockSize, scale, gravity } = constants;
@@ -77,6 +77,8 @@ const initGame = async () => {
     adventurerDoubleJumping,
     adventurerAlive,
     loopCount,
+    isWhaleWolf,
+    isWhaleWolfFor,
     difficulty,
     speed,
     score;
@@ -115,30 +117,61 @@ const initGame = async () => {
     adventurerAlive = true;
     adventurerJumping = false;
     adventurerDoubleJumping = false;
+    isWhaleWolf = false;
+    isWhaleWolfFor = 0;
     adventurer.animationSpeed = 0.1;
     score = 0;
     adventurer.y = SCENE.height - blockSize * scale;
 
     const worldSprites = [
-      ...generatePlatformSlice(0 * blockSize * scale, [1, 0, 0]),
-      ...generatePlatformSlice(4 * blockSize * scale, [1, 0, 0]),
-      ...generatePlatformSlice(8 * blockSize * scale, [1, 0, 0]),
-      ...generatePlatformSlice(12 * blockSize * scale, [1, 0, 0]),
-      ...generatePlatformSlice(16 * blockSize * scale, [1, 0, 0]),
-      ...generatePlatformSlice(20 * blockSize * scale, [1, 0, 0])
+      ...generatePlatformSlice({
+        xOffset: 0 * blockSize * scale,
+        platformConfiguration: [1, 0, 0],
+        itemTypes: [undefined]
+      }),
+      ...generatePlatformSlice({
+        xOffset: 4 * blockSize * scale,
+        platformConfiguration: [1, 0, 0],
+        itemTypes: [undefined]
+      }),
+      ...generatePlatformSlice({
+        xOffset: 8 * blockSize * scale,
+        platformConfiguration: [1, 0, 0],
+        itemTypes: [undefined]
+      }),
+      ...generatePlatformSlice({
+        xOffset: 12 * blockSize * scale,
+        platformConfiguration: [1, 0, 0],
+        itemTypes: [undefined]
+      }),
+      ...generatePlatformSlice({
+        xOffset: 16 * blockSize * scale,
+        platformConfiguration: [1, 0, 0],
+        itemTypes: [undefined]
+      }),
+      ...generatePlatformSlice({
+        xOffset: 20 * blockSize * scale,
+        platformConfiguration: [1, 0, 0],
+        itemTypes: [undefined]
+      })
     ];
     worldSprites.forEach(sprite => worldContainer.addChild(sprite));
   };
 
-  const toggleAdventurerIdle = isGameStoped => {
-    if (isGameStoped) {
-      setAdventurerAnimation("idle");
+  const toggleAdventurerIdle = isGameStopped => {
+    if (isGameStopped) {
+      setAdventurerAnimation("idle", isWhaleWolf);
     } else {
-      setAdventurerAnimation("running");
+      setAdventurerAnimation("running", isWhaleWolf);
     }
   };
 
   const jump = () => {
+    if (isWhaleWolf) {
+      adventurerVelocityY = -5;
+      adventurerJumping = true;
+      return;
+    }
     if (adventurerDoubleJumping) return;
     // TODO: Think about disabling the double jump if you're already falling?
     // adventurerJumping || adventurerVelocityY > 0
@@ -146,11 +179,11 @@ const initGame = async () => {
       // switch model to double jump
       adventurerDoubleJumping = true;
       adventurerVelocityY = -13;
-      setAdventurerAnimation("flipping");
+      setAdventurerAnimation("flipping", isWhaleWolf);
     } else {
       // switch model to jump
       adventurerVelocityY = -9;
-      setAdventurerAnimation("jumpingUp");
+      setAdventurerAnimation("jumpingUp", isWhaleWolf);
     }
     adventurerJumping = true;
   };
@@ -248,6 +281,19 @@ const initGame = async () => {
       }
     }
     loopCount += 1;
+
+    if (isWhaleWolfFor >= 1) {
+      isWhaleWolfFor--;
+      if (isWhaleWolfFor <= 0) {
+        // flip out of whale wolf
+        isWhaleWolf = false;
+        isWhaleWolfFor >= 0;
+        adventurerJumping = false;
+        adventurerDoubleJumping = false;
+        adventurerVelocityY = -24;
+        setAdventurerAnimation("flipping");
+      }
+    }
     score++;
 
     // the number of pixels to displace everything to the left
@@ -313,23 +359,47 @@ const initGame = async () => {
         if (aliases.includes("floorDeath")) damage = 10;
         if (aliases.includes("item-hamburger")) damage = 200;
         if (aliases.includes("item-avocado")) damage = 100;
+        if (aliases.includes("item-shrimp")) damage = 10;
 
         //TODO: Special effect visual
-        score -= damage;
+        if (!isWhaleWolf) {
+          score -= damage;
+        }
 
         // deal with bonuses
         let bonus = 0;
         if (aliases.includes("item-water")) bonus = 100;
         if (aliases.includes("item-recycle")) bonus = 200;
+        if (aliases.includes("item-shrimp") && isWhaleWolf) bonus = 20;
         if (aliases.includes("item-pimento")) {
           speed = (speed * 3) / 4;
+          if (speed < 1 / 20) {
+            speed = 1 / 20;
+          }
           adventurer.animationSpeed = (adventurer.animationSpeed * 5) / 6;
+          if (adventurer.animationSpeed < 0.1) {
+            adventurer.animationSpeed = 0.1;
+          }
           bonus = 1000;
         }
         if (aliases.includes("item-renault")) {
           speed = speed * 1.5;
+          if (speed > 2) {
+            speed = 2;
+          }
           adventurer.animationSpeed = adventurer.animationSpeed * 1.1;
+          if (adventurer.animationSpeed > 2) {
+            adventurer.animationSpeed = 2;
+          }
           bonus = score;
+        }
+        if (aliases.includes("item-moon")) {
+          speed = 0.1;
+          adventurer.animationSpeed = 0.1;
+          bonus = 1000;
+          isWhaleWolf = true;
+          isWhaleWolfFor = 1000;
+          setAdventurerAnimation("swimming");
         }
 
         //TODO: Special effect visual
@@ -344,7 +414,9 @@ const initGame = async () => {
           "item-pimento",
           "item-recycle",
           "item-water",
-          "item-renault"
+          "item-renault",
+          "item-moon",
+          "item-shrimp"
         ].includes(a)
       );
       if (destroySprite) {
@@ -376,10 +448,10 @@ const initGame = async () => {
     // Handle changing animation
     if (adventurerVelocityY === 0 && prevAdventurerVelocityY !== 0) {
       // started running
-      setAdventurerAnimation("running");
+      setAdventurerAnimation("running", isWhaleWolf);
     } else if (adventurerVelocityY > 0 && prevAdventurerVelocityY <= 0) {
       // started falling
-      setAdventurerAnimation("falling");
+      setAdventurerAnimation("falling", isWhaleWolf);
     }
 
     // move each block
@@ -391,9 +463,10 @@ const initGame = async () => {
     const rightMostSprite =
       worldContainer.children[worldContainer.children.length - 1];
     if (rightMostSprite.x < SCENE.width + blockSize * scale * 4) {
-      const worldSprites = generatePlatformSlice(
-        rightMostSprite.x + blockSize * scale
-      );
+      const worldSprites = generatePlatformSlice({
+        xOffset: rightMostSprite.x + blockSize * scale,
+        isWhaleWolf
+      });
       worldSprites.forEach(sprite => worldContainer.addChild(sprite));
     }
   };

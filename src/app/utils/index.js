@@ -43,13 +43,14 @@ export const createLevel = rawTiles => {
 /**
  * Creates platform tiles.
  */
-export const generatePlatformSlice = (
+export const generatePlatformSlice = ({
   xOffset,
   platformConfiguration,
   floorTypes,
   itemTypes,
-  maxNumItems = 4
-) => {
+  maxNumItems = 4,
+  isWhaleWolf
+}) => {
   const { SCENE, blockSize, scale } = constants;
   const resource = name => PIXI.Loader.shared.resources[name] || undefined;
   floorTypes = floorTypes || [
@@ -68,24 +69,32 @@ export const generatePlatformSlice = (
   ];
 
   itemTypes = itemTypes || [
-    ...Array(400).fill(undefined),
-    ...Array(13).fill("item-avocado"),
-    ...Array(9).fill("item-hamburger"),
-    ...Array(6).fill("item-recycle"),
-    ...Array(5).fill("item-water"),
-    ...Array(2).fill("item-pimento"),
-    ...Array(2).fill("item-renault")
-  ];
-  platformConfiguration = platformConfiguration || [
-    Math.floor(Math.random() * floorTypes.length),
-    Math.floor(Math.random() * floorTypes.length),
-    Math.floor(Math.random() * floorTypes.length)
+    ...Array(900).fill(undefined),
+    ...Array(26).fill("item-avocado"),
+    ...Array(18).fill("item-hamburger"),
+    ...Array(12).fill("item-recycle"),
+    ...Array(10).fill("item-water"),
+    ...Array(4).fill("item-pimento"),
+    ...Array(4).fill("item-renault"),
+    ...Array(1).fill("item-moon")
   ];
 
+  // 🐋🐺
+  if (isWhaleWolf) {
+    floorTypes = [undefined, "floorSolid"];
+    itemTypes = [...itemTypes, ...Array(900).fill("item-shrimp")];
+    platformConfiguration = [1, 0, 0];
+  } else {
+    platformConfiguration = platformConfiguration || [
+      Math.floor(Math.random() * floorTypes.length),
+      Math.floor(Math.random() * floorTypes.length),
+      Math.floor(Math.random() * floorTypes.length)
+    ];
+  }
+
   const sprites = [];
-  platformConfiguration.forEach((floorType, level) => {
-    const floorResource =
-      floorTypes[floorType] && resource(floorTypes[floorType]);
+  platformConfiguration.forEach((index, level) => {
+    const floorResource = floorTypes[index] && resource(floorTypes[index]);
     if (floorResource) {
       const y = SCENE.height - level * 5 * blockSize * scale;
       for (let x = 0; x < 4; x++) {
