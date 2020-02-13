@@ -30,6 +30,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "src/index.html")
     }),
+    // Also generate an about.html
+    new HtmlWebpackPlugin({  
+      filename: 'about.html',
+      template: path.resolve(__dirname, 'src/about.html')
+    }),
     // Pixi will manage game asset loading, so we just need to copy them.
     // Webpack will not be involved in bundling.
     new CopyPlugin([{ from: "src/app/assets", to: "assets" }])
