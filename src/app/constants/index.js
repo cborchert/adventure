@@ -31,7 +31,8 @@ const constants = {
     good: "assets/sounds/good.wav",
     bad: "assets/sounds/bad.wav",
     main: "assets/sounds/loop.mp3",
-    whale: "assets/sounds/whale.wav"
+    whale: "assets/sounds/whale.wav",
+    pimento: "assets/sounds/pimento.mp3"
   },
   gravity: 0.4
 };
