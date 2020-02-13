@@ -1,9 +1,11 @@
 import * as PIXI from "pixi.js";
 import constants from "../constants";
 
-export default () => {
+export default (isNight = false) => {
   const { SCENE } = constants;
-  const { texture } = PIXI.Loader.shared.resources["backgroundDay"];
+  const { texture } = isNight
+    ? PIXI.Loader.shared.resources["backgroundNight"]
+    : PIXI.Loader.shared.resources["backgroundDay"];
   const { width, height } = texture;
   const sprite = new PIXI.TilingSprite(texture, width, height);
   sprite.x = sprite.y = 0;

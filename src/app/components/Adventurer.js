@@ -1,11 +1,11 @@
 import * as PIXI from "pixi.js";
 import constants from "../constants/";
 
-export default () => {
+export default (animationKey = "running") => {
   const { SCENE, scale, blockSize } = constants;
   const resource = PIXI.Loader.shared.resources["adventurer"];
   const sprite = new PIXI.AnimatedSprite(
-    resource.spritesheet.animations.running
+    resource.spritesheet.animations[animationKey]
   );
   sprite.anchor.set(0, 1);
   sprite.x = 0;
