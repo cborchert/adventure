@@ -13,5 +13,15 @@ export default (animationKey = "running") => {
   sprite.scale.x = sprite.scale.y = scale;
   sprite.play();
   sprite.animationSpeed = 0.1;
-  return sprite;
+
+  const setAnimation = animationKey => {
+    const currentTextures = resource.spritesheet.animations[animationKey];
+
+    if (sprite.textures !== currentTextures) {
+      sprite.textures = currentTextures;
+      sprite.play();
+    }
+  };
+
+  return { adventurer: sprite, setAnimation };
 };
