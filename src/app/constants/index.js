@@ -24,6 +24,15 @@ const constants = {
     "item-renault": "assets/sprites/items/renault.png",
     "item-shrimp": "assets/sprites/items/shrimp.png"
   },
+  sounds: {
+    "simple-jump": "assets/sounds/simple-jump.wav",
+    "double-jump": "assets/sounds/double-jump.wav",
+    death: "assets/sounds/death.wav",
+    good: "assets/sounds/good.wav",
+    bad: "assets/sounds/bad.wav",
+    main: "assets/sounds/loop.mp3",
+    whale: "assets/sounds/whale.wav"
+  },
   gravity: 0.4
 };
 

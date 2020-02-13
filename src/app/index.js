@@ -3,10 +3,13 @@ import constants from "./constants";
 import Adventurer from "./components/Adventurer";
 import Background from "./components/Background";
 import BoxText from "./components/BoxText.js";
+import Sound from "./components/Sounds.js";
 import { loadPixiAssets, generatePlatformSlice } from "./utils";
 
 const initGame = async () => {
-  const { SCENE, assets, blockSize, scale, gravity } = constants;
+  const { SCENE, assets, blockSize, scale, gravity, sounds } = constants;
+
+  const PIXISOUND = Sound(sounds);
 
   // retain pixilation
   PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
@@ -84,7 +87,7 @@ const initGame = async () => {
     score;
 
   let scoreText = new PIXI.Text("", {
-    fontFamily: "Futura",
+    fontFamily: "Futura, Comic Sans MS",
     dropShadow: true,
     fontWeight: "bold",
     fontSize: 36,
@@ -110,6 +113,8 @@ const initGame = async () => {
     // hacky as fuck. there's probably a z-index prop somewhere...
     stage.removeChild(helperContainer);
     stage.addChild(helperContainer);
+    PIXISOUND.sound.stop("death");
+    PIXISOUND.sound.play("main", { loop: true, volume: 0.5 });
 
     loopCount = 0;
     difficulty = 0;
@@ -179,9 +184,11 @@ const initGame = async () => {
       // switch model to double jump
       adventurerDoubleJumping = true;
       adventurerVelocityY = -13;
+      PIXISOUND.sound.play("double-jump");
       setAdventurerAnimation("flipping", isWhaleWolf);
     } else {
       // switch model to jump
+      PIXISOUND.sound.play("simple-jump");
       adventurerVelocityY = -9;
       setAdventurerAnimation("jumpingUp", isWhaleWolf);
     }
@@ -238,7 +245,7 @@ const initGame = async () => {
     } else if (score < 1000) {
       message = "Oh no, you were our last hope";
     } else if (score < 5000) {
-      message = "Good job, future generations will appreciate your work";
+      message = "Future generations will appreciate your work";
     } else if (score < 10000) {
       message = "Excellent! You've saved the planet";
     } else {
@@ -252,10 +259,6 @@ const initGame = async () => {
 
   const gameLoop = () => {
     animationFrame = requestAnimationFrame(gameLoop);
-    if (!adventurerAlive) {
-      toggleAdventurerIdle(true);
-      showLoseMessage(score);
-    }
     if (!adventurerAlive || !gameIsStarted) return;
 
     // Day/night cycle
@@ -286,6 +289,8 @@ const initGame = async () => {
       isWhaleWolfFor--;
       if (isWhaleWolfFor <= 0) {
         // flip out of whale wolf
+        PIXISOUND.sound.stop("whale");
+        PIXISOUND.sound.play("main", { loop: true, volume: 0.5 });
         isWhaleWolf = false;
         isWhaleWolfFor >= 0;
         adventurerJumping = false;
@@ -356,7 +361,11 @@ const initGame = async () => {
       if (collidesY) {
         // deal with damage
         let damage = 0;
-        if (aliases.includes("floorDeath")) damage = 10;
+        let dontPlaySound = false;
+        if (aliases.includes("floorDeath")) {
+          dontPlaySound = true;
+          damage = 10;
+        }
         if (aliases.includes("item-hamburger")) damage = 200;
         if (aliases.includes("item-avocado")) damage = 100;
         if (aliases.includes("item-shrimp")) damage = 10;
@@ -368,7 +377,9 @@ const initGame = async () => {
 
         // deal with bonuses
         let bonus = 0;
-        if (aliases.includes("item-water")) bonus = 100;
+        if (aliases.includes("item-water")) {
+          bonus = 100;
+        }
         if (aliases.includes("item-recycle")) bonus = 200;
         if (aliases.includes("item-shrimp") && isWhaleWolf) bonus = 20;
         if (aliases.includes("item-pimento")) {
@@ -394,12 +405,19 @@ const initGame = async () => {
           bonus = score;
         }
         if (aliases.includes("item-moon")) {
+          PIXISOUND.sound.stop("main");
+          PIXISOUND.sound.play("whale", { loop: true, volume: 0.5 });
           speed = 0.1;
           adventurer.animationSpeed = 0.1;
           bonus = 1000;
           isWhaleWolf = true;
           isWhaleWolfFor = 1000;
           setAdventurerAnimation("swimming");
+        }
+
+        if (!dontPlaySound) {
+          if (bonus > 0) PIXISOUND.sound.play("good");
+          if (damage > 0) PIXISOUND.sound.play("bad");
         }
 
         //TODO: Special effect visual
@@ -442,7 +460,11 @@ const initGame = async () => {
     adventurer.y = nextBottom;
     // adventurer dies from falling
     if (adventurer.y - adventurer.height > SCENE.height || score < 0) {
+      PIXISOUND.sound.stop("main");
       adventurerAlive = false;
+      toggleAdventurerIdle(true);
+      PIXISOUND.sound.play("death");
+      showLoseMessage(score);
     }
 
     // Handle changing animation
