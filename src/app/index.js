@@ -21,43 +21,45 @@ const initGame = async () => {
     antialias: false,
     ...SCENE
   });
-  const container = new PIXI.Container();
 
   // load sprites into the pixi shared loader for use
   await loadPixiAssets(assets);
 
-  // add the background to the container
+  // add the backgrounds to the container
+  const bgContainer = new PIXI.Container();
   const background = Background();
-  // Background Night
   const backgroundNight = Background(true);
-  container.addChild(background);
+  let sunSetting = true;
+  backgroundNight.alpha = 0;
+  bgContainer.addChild(background);
+  bgContainer.addChild(backgroundNight);
+  stage.addChild(bgContainer);
 
   // add the adventurer to the container
-  const adventurer = Adventurer("running");
-  const adventurerIdle = Adventurer("idle");
-  const adventurerSpriteJumping = Adventurer("jumping");
-  const adventurerJumpingFlip = Adventurer("jumpingFlip");
-  container.addChild(adventurerIdle);
+  const container = new PIXI.Container();
+  const { adventurer, setAnimation: setAdventurerAnimation } = Adventurer(
+    "idle"
+  );
+  container.addChild(adventurer);
+  stage.addChild(container);
 
+  // add platforms to the world
+  let worldContainer = new PIXI.Container();
+  stage.addChild(worldContainer);
+
+  // add the helper text to the screen
+  const helperContainer = new PIXI.Container();
   const logo = PIXI.Sprite.from("assets/sprites/game/title.png");
   logo.anchor.set(0.5);
   logo.x = SCENE.width / 2;
   logo.y = 120;
-  container.addChild(logo);
-
-  // add platforms to the world
-  let worldContainer = new PIXI.Container();
-
-  stage.addChild(container);
-  stage.addChild(worldContainer);
-  renderer.render(stage);
-
+  helperContainer.addChild(logo);
   const boxText = BoxText(
     500,
     200,
     "Le monde est en danger ! \r\nEvite les avocats & les hamburgers pour survivre \r\n(ps: ne cours pas sur les plaques rouges\r\ntu risques de te faire très très mal)\r\n\r\nVas-tu réussir à sauver le monde ? "
   );
-  container.addChild(boxText);
+  helperContainer.addChild(boxText);
 
   // prepare for animation
   let adventurerVelocityY = 0;
@@ -66,9 +68,9 @@ const initGame = async () => {
 
   let lastDownTarget = null;
 
-  let currentBackgroundNight = false;
-
-  let loseBox = null;
+  let loseBox = BoxText(400, 100, "");
+  loseBox.alpha = 0;
+  helperContainer.addChild(loseBox);
 
   // allow jumps and double jumps
   let adventurerJumping,
@@ -87,8 +89,10 @@ const initGame = async () => {
     fill: 0xffffff,
     align: "center"
   });
-  stage.addChild(scoreText);
+  helperContainer.addChild(scoreText);
+  stage.addChild(helperContainer);
 
+  renderer.render(stage);
   const reset = () => {
     // remove all the previous tiles and repopulate
     stage.removeChild(worldContainer);
@@ -99,6 +103,11 @@ const initGame = async () => {
       sprite.destroy();
       worldContainer.removeChild(sprite);
     });
+
+    // reset the fact the the helper container always shows on front
+    // hacky as fuck. there's probably a z-index prop somewhere...
+    stage.removeChild(helperContainer);
+    stage.addChild(helperContainer);
 
     loopCount = 0;
     difficulty = 0;
@@ -123,11 +132,9 @@ const initGame = async () => {
 
   const toggleAdventurerIdle = isGameStoped => {
     if (isGameStoped) {
-      container.removeChild(adventurer);
-      container.addChild(adventurerIdle);
+      setAdventurerAnimation("idle");
     } else {
-      container.removeChild(adventurerIdle);
-      container.addChild(adventurer);
+      setAdventurerAnimation("running");
     }
   };
 
@@ -139,9 +146,11 @@ const initGame = async () => {
       // switch model to double jump
       adventurerDoubleJumping = true;
       adventurerVelocityY = -13;
+      setAdventurerAnimation("flipping");
     } else {
       // switch model to jump
       adventurerVelocityY = -9;
+      setAdventurerAnimation("jumpingUp");
     }
     adventurerJumping = true;
   };
@@ -151,14 +160,13 @@ const initGame = async () => {
       if (adventurerAlive) {
         jump();
       } else {
-        container.removeChild(loseBox);
-
-        toggleAdventurerIdle(false);
+        loseBox.alpha = 0;
         reset();
+        toggleAdventurerIdle(false);
       }
     } else {
-      container.removeChild(boxText);
-      container.removeChild(logo);
+      boxText.alpha = 0;
+      logo.alpha = 0;
       gameIsStarted = true;
       toggleAdventurerIdle(false);
     }
@@ -204,28 +212,9 @@ const initGame = async () => {
       message = "Woah, Eric is very proud of you !";
     }
 
-    loseBox = BoxText(
-      400,
-      100,
-      "You lose...\r\n" + message + "\r\n Your score is: " + score
-    );
-    // Current bug, can't hide loseBox removeChild not working...
-    // container.addChild(loseBox);
-  };
-
-  const changeBackground = () => {
-    if (currentBackgroundNight) {
-      container.removeChild(backgroundNight);
-      container.addChild(background);
-    } else {
-      container.removeChild(background);
-      container.addChild(backgroundNight);
-    }
-
-    // We need to remove and reshow adventurer
-    container.removeChild(adventurer);
-    container.addChild(adventurer);
-    currentBackgroundNight = !currentBackgroundNight;
+    loseBox.children[0].text =
+      "You lose...\r\n" + message + "\r\n Your score is: " + score;
+    loseBox.alpha = 1;
   };
 
   const gameLoop = () => {
@@ -236,14 +225,20 @@ const initGame = async () => {
     }
     if (!adventurerAlive || !gameIsStarted) return;
 
-    // ça ne sert à rien ahaha
-    if (score && score % 1000 === 0) {
-      changeBackground();
+    // Day/night cycle
+    if (loopCount % 20 === 0) {
+      backgroundNight.alpha += sunSetting ? 0.01 : -0.01;
+      if (backgroundNight.alpha >= 1) {
+        backgroundNight.alpha = 1;
+        sunSetting = false;
+      } else if (backgroundNight.alpha <= 0) {
+        backgroundNight.alpha = 0;
+        sunSetting = true;
+      }
     }
 
     // Speed up the loop every 200 repetitions
-    if (loopCount >= 200) {
-      loopCount = 0;
+    if (loopCount && loopCount % 200 === 0) {
       difficulty += 1;
       if (speed < 0.5) {
         speed += 1 / 64;
@@ -363,6 +358,7 @@ const initGame = async () => {
 
     // MOVE adventurer
     // add gravity to velocity
+    const prevAdventurerVelocityY = adventurerVelocityY;
     if (adventurerFalls) {
       adventurerVelocityY = adventurerVelocityY + gravity;
     } else {
@@ -377,8 +373,15 @@ const initGame = async () => {
       adventurerAlive = false;
     }
 
-    // background moves slower than foreground to give a parallax effect
-    background.tilePosition.x -= dX / 4;
+    // Handle changing animation
+    if (adventurerVelocityY === 0 && prevAdventurerVelocityY !== 0) {
+      // started running
+      setAdventurerAnimation("running");
+    } else if (adventurerVelocityY > 0 && prevAdventurerVelocityY <= 0) {
+      // started falling
+      setAdventurerAnimation("falling");
+    }
+
     // move each block
     worldContainer.children.forEach(worldSprite => {
       worldSprite.x -= dX;

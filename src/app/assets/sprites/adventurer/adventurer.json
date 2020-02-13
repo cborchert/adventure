@@ -209,6 +209,14 @@
       "adventurer17.png",
       "adventurer22.png",
       "adventurer23.png"
+    ],
+    "jumpingUp": ["adventurer16.png", "adventurer17.png"],
+    "falling": ["adventurer22.png", "adventurer23.png"],
+    "flipping": [
+      "adventurer18.png",
+      "adventurer19.png",
+      "adventurer20.png",
+      "adventurer21.png"
     ]
   },
   "meta": {
