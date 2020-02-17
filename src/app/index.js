@@ -289,7 +289,7 @@ const initGame = async () => {
       isWhaleWolfFor--;
       if (isWhaleWolfFor <= 0) {
         // flip out of whale wolf
-        PIXISOUND.sound.stop("whale");
+        PIXISOUND.sound.stopAll();
         PIXISOUND.sound.play("main", { loop: true, volume: 0.5 });
         isWhaleWolf = false;
         isWhaleWolfFor >= 0;
@@ -406,7 +406,7 @@ const initGame = async () => {
           bonus = score;
         }
         if (aliases.includes("item-moon")) {
-          PIXISOUND.sound.stop("main");
+          PIXISOUND.sound.stopAll();
           PIXISOUND.sound.play("whale", { loop: true, volume: 0.5 });
           speed = 0.1;
           adventurer.animationSpeed = 0.1;
@@ -418,7 +418,7 @@ const initGame = async () => {
 
         if (!dontPlaySound) {
           if (bonus > 0) PIXISOUND.sound.play("good");
-          if (damage > 0) PIXISOUND.sound.play("bad");
+          if (damage > 0 && !isWhaleWolf) PIXISOUND.sound.play("bad");
         }
 
         //TODO: Special effect visual
