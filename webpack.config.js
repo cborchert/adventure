@@ -47,6 +47,7 @@ module.exports = {
     }),
     // Pixi will manage game asset loading, so we just need to copy them.
     // Webpack will not be involved in bundling.
-    new CopyPlugin([{ from: "src/app/assets", to: "assets" }])
+    new CopyPlugin([{ from: "src/app/assets", to: "assets" }]),
+    new CopyPlugin([{ from: "/manifest.json", to: "manifest.json" }])
   ]
 };
