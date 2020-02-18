@@ -6,6 +6,19 @@ import BoxText from "./components/BoxText.js";
 import Sound from "./components/Sounds.js";
 import { loadPixiAssets, generatePlatformSlice } from "./utils";
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .then(registration => {
+        console.log("SW registered: ", registration);
+      })
+      .catch(registrationError => {
+        console.log("SW registration failed: ", registrationError);
+      });
+  });
+}
+
 const initGame = async () => {
   const { SCENE, assets, blockSize, scale, gravity, sounds } = constants;
 

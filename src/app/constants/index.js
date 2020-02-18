@@ -25,13 +25,13 @@ const constants = {
     "item-shrimp": "assets/sprites/items/shrimp.png"
   },
   sounds: {
-    "simple-jump": "assets/sounds/simple-jump.wav",
-    "double-jump": "assets/sounds/double-jump.wav",
-    death: "assets/sounds/death.wav",
-    good: "assets/sounds/good.wav",
-    bad: "assets/sounds/bad.wav",
+    "simple-jump": "assets/sounds/simple-jump.mp3",
+    "double-jump": "assets/sounds/double-jump.mp3",
+    death: "assets/sounds/death.mp3",
+    good: "assets/sounds/good.mp3",
+    bad: "assets/sounds/bad.mp3",
     main: "assets/sounds/loop.mp3",
-    whale: "assets/sounds/whale.wav",
+    whale: "assets/sounds/whale.mp3",
     pimento: "assets/sounds/pimento.mp3"
   },
   gravity: 0.4
